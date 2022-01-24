@@ -11,7 +11,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>de846fec-e265-459a-9936-09c35d337d00</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>app.js</StartupFile>
+    <StartupFile>index.js</StartupFile>
     <StartWebBrowser>False</StartWebBrowser>
     <SearchPath>
     </SearchPath>
@@ -29,7 +29,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include=".env" />
-    <Content Include="app.js" />
+    <Content Include="index.js" />
     <Content Include="config.json">
       <SubType>Code</SubType>
     </Content>
