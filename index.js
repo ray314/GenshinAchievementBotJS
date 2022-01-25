@@ -3,6 +3,9 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const doc = new GoogleSpreadsheet('1Wa10jrAqu6hTdV8HJJf6jFKpLRjYht1xeBbsS0SDRUU');
+const creds = require('./genshinachievements-3c51d828779a')
 
 const { Intents, Client, MessageEmbed } = require("discord.js");
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
@@ -11,6 +14,28 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 client.on("ready", () => {
 	console.log(`Logged in as ${client.user.tag}!`)
 	client.user.setActivity('WHEEZETAO', { type: 'LISTENING' });
+
+	(async function () {
+		console.log("Loading account...");
+		//await doc.useServiceAccountAuth(creds, 'hu-tao@genshinachievements.iam.gserviceaccount.com');
+		await doc.useServiceAccountAuth({
+			// Use env variables
+			client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+			private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+		});
+		console.log("Loading info...");
+		await doc.loadInfo(); // Load spreadsheet
+		console.log(doc.title); // Print title
+
+		// NA RANK
+		const sheet = doc.sheetsByIndex[4];
+		//await sheet.loadCells();
+		await sheet.loadHeaderRow(2);
+		//const cell = sheet.getCellByA1('B4');
+		//const cells = await sheet.loadCells('A1:E10');
+		const rows = await sheet.getRows({ offset: 1, limit: 10 });
+		console.log(rows);
+	}());
 });
 
 var rankingList;
