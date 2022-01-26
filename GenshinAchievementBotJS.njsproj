@@ -38,6 +38,9 @@
     <Content Include="deploy-commands.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="embedpages.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="index.js">
       <SubType>Code</SubType>
     </Content>
