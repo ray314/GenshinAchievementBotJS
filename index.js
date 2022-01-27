@@ -13,7 +13,10 @@ const pagination = require('./embedpages.js');
 
 //const disbutpages = require('./embedpages.js');
 
-
+var rankingWorldMsgRef;
+var rankingEUMsgRef;
+var rankingNAMsgRef;
+var rankingAsiaMsgRef;
 var rankingList = [];
 client.on("ready", () => {
 	console.log(`Logged in as ${client.user.tag}!`)
@@ -48,23 +51,13 @@ client.on("ready", () => {
 	console.log("Loading info...");
 	await doc.loadInfo(); // Load spreadsheet
 	console.log(doc.title); // Print title
-	/*
-	// NA RANK
-	const sheet = doc.sheetsByIndex[4];
-	//await sheet.loadCells();
-	await sheet.loadHeaderRow(2);
-	//const cell = sheet.getCellByA1('B4');
-	//const cells = await sheet.loadCells('A1:E10');
-	const rows = await sheet.getRows({ offset: 1, limit: 10 });
-	rankingList = rows;
-	console.log("Rows loaded");*/
 }());
 
 
-const rankingsEmbed = async() => {
+const rankingsEmbed = async(title, region) => {
 	// Load sheet
 	// NA RANK
-	const sheet = doc.sheetsByTitle['World'];
+	const sheet = doc.sheetsByTitle[region];
 	//await sheet.loadCells();
 	await sheet.loadHeaderRow(2);
 	//const cell = sheet.getCellByA1('B4');
@@ -75,7 +68,7 @@ const rankingsEmbed = async() => {
 	// Embeds the ranking message
 	const rankingsEmbed = new MessageEmbed()
 		.setColor('#FFBB5C')
-		.setTitle('Top 10 Global Achievements Rankings')
+		.setTitle(`Top 10 ${title} Achievements Rankings`)
 		.setURL('https://docs.google.com/spreadsheets/d/1Wa10jrAqu6hTdV8HJJf6jFKpLRjYht1xeBbsS0SDRUU/htmlview#')
 		.setThumbnail('https://cdn.discordapp.com/attachments/364202581938929674/935324914964119642/icon.png')
 	/*.addFields(
@@ -100,32 +93,80 @@ const rankingsEmbed = async() => {
 }
 
 // Update rankings in rankings channel
-const updateRankings = () => {
-
+const updateRankings = async () => {
+	
 }
+
+
 // Post rankings in rankings channel
-const postRankings = () => {
+const postRankings = async () => {
+	const rankingWorld = await rankingsEmbed('World', 'Global');
+	const msg = new Message(client, {
 
+    })
+	rankingWorldMsgRef = await client.channels.cache.get('925162552730730506').send(rankingWorld)
 }
 
-client.on("interactionCreate", async interaction => {
+/*client.on("interactionCreate", async interaction => {
 	if (!interaction.isCommand()) return;
 	const { commandName } = interaction;
 
 	if (commandName === 'ping') {
 		await interaction.reply('Pong!');
 	} else if (commandName === 'rankings') {
-		await interaction.reply({ embeds: [await rankingsEmbed()] });
+		await interaction.reply({ embeds: [await rankingsEmbed('Global', 'World')] });
 	} else if (commandName === 'user') {
 		await interaction.reply('User info.');
 	}
-});
+});*/
+
+//var GLBTimer;
 
 client.on("message", async message => {
 	if (message.content === ".rankings") {
-		const rankRegions = [await rankingsEmbed()];
+		const rankingsWorld = await rankingsEmbed('Global', 'World');
+		const rankingsEU = await rankingsEmbed('EU', 'EU RANK')
+		const rankingsNA = await rankingsEmbed('NA', 'NA RANK')
+		const rankingsAsia = await rankingsEmbed('Asia', 'ASIA RANK')
+		const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
 		pagination.run(client, message, rankRegions);
-    }
+		// Live
+	} else if (message.content === ".rankingGLBLive") {
+		const rankingsWorld = await rankingsEmbed('Global', 'World');
+		rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
+		const timer = setInterval(() => {
+			const rankings = await rankingsEmbed('Global', 'World');
+			rankingWorldMsgRef.edit({ embeds: [rankings] });
+			console.log("global rankings edited");
+		}, 6000);
+		// EU
+	} else if (message.content === ".rankingEULive") {
+		const rankingsEU = await rankingsEmbed('EU', 'EU RANK');
+		rankingEUMsgRef = await message.channel.send({ embeds: [rankingsEU] });
+		const timer = setInterval(() => {
+			const rankings = await rankingsEmbed('EU', 'EU RANK');
+			rankingEUMsgRef.edit({ embeds: [rankings] });
+			console.log("eu rankings edited");
+		}, 6000);
+		// NA
+	} else if (message.content === ".rankingGLBLive") {
+		const rankingsNA = await rankingsEmbed('NA', 'NA RANK');
+		rankingNAMsgRef = await message.channel.send({ embeds: [rankingsNA] });
+		const timer = setInterval(() => {
+			const rankings = await rankingsEmbed('NA', 'NA RANK');
+			rankingNAMsgRef.edit({ embeds: [rankings] });
+			console.log("na rankings edited");
+		}, 6000);
+		// Asia
+	} else if (message.content === ".rankingAsiaLive") {
+		const rankingsAsia = await rankingsEmbed('Asia', 'ASIA RANK');
+		rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
+		const timer = setInterval(() => {
+			const rankings = await rankingsEmbed('Asia', 'ASIA RANK');
+			rankingAsiaMsgRef.edit({ embeds: [rankings] });
+			console.log("asia rankings edited");
+		}, 6000);
+	}
 })
 
 client.login(process.env.TOKEN);

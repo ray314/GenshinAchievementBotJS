@@ -4,12 +4,11 @@ const { pagination } = require('reconlx');
 // Constants
 
 
-
 module.exports = {
     name: "",
 
     run: async (client, message, embeds) => {
-        embeds.push(new MessageEmbed()
+        /*embeds.push(new MessageEmbed()
             .setTitle("EU Rankings")
             .setColor("YELLOW")
             .setAuthor({ name: "" }))
@@ -20,7 +19,7 @@ module.exports = {
         embeds.push(new MessageEmbed()
             .setTitle("NA Rankings")
             .setColor("BLUE"));
-           
+           */
         pagination({
             embeds: embeds,
 
