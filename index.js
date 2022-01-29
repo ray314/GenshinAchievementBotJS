@@ -35,7 +35,7 @@ client.on("ready", () => {
 
 	// Live update start
 	console.log("Starting live update...");
-	setInterval(updateRankings, 10000);
+	setInterval(updateRankings, 60000);
 	console.log("Done")
 }());
 
@@ -87,17 +87,17 @@ const updateRankings = async () => {
 	}
 }
 
-
-const GLBChannel = client.channels.cache.get('932174810858008586');
-const EUChannel = client.channels.cache.get('932173907694354492');
-const NAChannel = client.channels.cache.get('932173948999843870');
-const AsiaCannel = client.channels.cache.get('932173991710441472');
-
 // Receive messages from user
 client.on("message", async message => {
 	const msg = message.content.toLowerCase();
 	// Check if member is not null
 	if (message.member !== null) {
+		// Channels
+		const GLBChannel = client.channels.cache.get('932174810858008586');
+		const EUChannel = client.channels.cache.get('932173948999843870');
+		const NAChannel = client.channels.cache.get('932173907694354492');
+		const AsiaChannel = client.channels.cache.get('932173991710441472');
+
 		const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 		const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
 		const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
@@ -110,8 +110,19 @@ client.on("message", async message => {
 			// Live
 		} if (msg.startsWith('.say')) {
 			if (message.author.bot) return;
-			const SayMessage = message.content.slice(4).trim();
-			message.channel.send(SayMessage)
+			// Get the channel mention
+			if (message.mentions.channels.size == 0) {
+				const SayMessage = message.content.slice(4).trim();
+				message.channel.send(SayMessage);
+			}
+			else {
+				let targetChannel = message.mentions.channels.first();
+				// Get the message to print
+
+				const args = message.content.split(" ").slice(2);
+				let saytext = args.join(" ");
+				targetChannel.send(saytext);
+			}
 		} else if (msg === ".rankingglblive" && roles) {
 			//const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 			rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
@@ -128,13 +139,13 @@ client.on("message", async message => {
 			//const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
-			await GLBChannel.send(rankingsWorld)
+			GLBChannel.send({ embeds: [rankingsWorld] })
 				.then(msg => rankingWorldMsgRef = msg);
-			await EUChannel.send(rankingsEU)
+			EUChannel.send({ embeds: [rankingsEU] })
 				.then(msg => rankingEUMsgRef = msg);
-			await NAChannel.send(rankingsNA)
+			NAChannel.send({ embeds: [rankingsNA] })
 				.then(msg => rankingNAMsgRef = msg);
-			await AsiaCannel.send(rankingsAsia)
+			AsiaChannel.send({ embeds: [rankingsAsia] })
 				.then(msg => rankingAsiaMsgRef = msg);
         }
 
