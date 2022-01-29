@@ -105,9 +105,12 @@ client.on("message", async message => {
 			const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
 			pagination.run(client, message, rankRegions);
 			// Live
-		} else if (msg === ".say") {
-			await message.channel.send(msg);
-        } else if (msg === ".rankingglblive" && roles) {
+		} if (message.content.startsWith(prefix + 'say')) {
+			if (message.author.bot) return;
+			const SayMessage = message.content.slice(4).trim();
+			message.channel.send("**" + SayMessage + "**")
+			message.channel.send("- " + `**${message.author}**`)
+		} else if (msg === ".rankingglblive" && roles) {
 			const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 			rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
 			// EU
