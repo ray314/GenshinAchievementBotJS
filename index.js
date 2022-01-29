@@ -90,13 +90,6 @@ const updateRankings = async () => {
 
 
 // Post rankings in rankings channel
-const postRankings = async () => {
-	const rankingWorld = await rankingsEmbed('World', 'Global');
-	const msg = new Message(client, {
-
-    })
-	rankingWorldMsgRef = await client.channels.cache.get('925162552730730506').send(rankingWorld)
-}
 
 // Receive messages from user
 client.on("message", async message => {
