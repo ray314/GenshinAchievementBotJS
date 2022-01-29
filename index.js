@@ -57,7 +57,7 @@ const rankingsEmbed = async(title, region, limit) => {
 		// _rawData[1] = Name, _rawData[2] = Score
 		rankingsEmbed.addField(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
 	}
-	rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1Wa10jrAqu6hTdV8HJJf6jFKpLRjYht1xeBbsS0SDRUU/htmlview#', true)
+	rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/', true)
 		.setTimestamp()
 	return rankingsEmbed;
 }
