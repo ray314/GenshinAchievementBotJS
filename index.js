@@ -133,7 +133,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/updateRankings', (req, res) => {
-	updateRankings();
+	setInterval(updateRankings, 10000);
 	res.send('Updated')
 })
 
