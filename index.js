@@ -85,47 +85,54 @@ const updateRankings = async () => {
 		const rankings = await rankingsEmbed('Asia', 'Asia Rank', 5);
 		rankingAsiaMsgRef.edit({ embeds: [rankings] });
 	}
-	console.log("rankings updated");
 }
 
 
-// Post rankings in rankings channel
+const GLBChannel = client.channels.cache.get('932174810858008586');
+const EUChannel = client.channels.cache.get('932173907694354492');
+const NAChannel = client.channels.cache.get('932173948999843870');
+const AsiaCannel = client.channels.cache.get('932173991710441472');
 
 // Receive messages from user
 client.on("message", async message => {
 	const msg = message.content.toLowerCase();
 	// Check if member is not null
 	if (message.member !== null) {
+		const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
+		const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
+		const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
+		const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
 		const roles = message.member.roles.cache.has('925164302082662460') || message.member.roles.cache.has('925163038712135700');
 		// Embed message
 		if (msg === ".rankings") {
-			const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
-			const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
-			const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
-			const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
 			const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
 			pagination.run(client, message, rankRegions);
 			// Live
-		} if (message.content.startsWith('.say')) {
+		} if (msg.startsWith('.say')) {
 			if (message.author.bot) return;
 			const SayMessage = message.content.slice(4).trim();
-			message.channel.send("**" + SayMessage + "**")
+			message.channel.send(SayMessage)
 		} else if (msg === ".rankingglblive" && roles) {
-			const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
+			//const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 			rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
 			// EU
 		} else if (msg === ".rankingeulive" && roles) {
-			const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5);
+			//const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5);
 			rankingEUMsgRef = await message.channel.send({ embeds: [rankingsEU] });
 			// NA
 		} else if (msg === ".rankingnalive" && roles) {
-			const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5);
+			//const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5);
 			rankingNAMsgRef = await message.channel.send({ embeds: [rankingsNA] });
 			// Asia
 		} else if (msg === ".rankingasialive" && roles) {
-			const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
+			//const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
-		}
+		} else if (msg == ".postallrankings" && roles) {
+			await GLBChannel.send({ embeds: [rankingsWorld] });
+			await EUChannel.send({ embeds: [rankingsEU] });
+			await NAChannel.send({ embeds: [rankingsNA] });
+			await AsiaCannel.send({ embeds: [rankingsAsia] });
+        }
 
     }
 	
@@ -138,7 +145,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/updateRankings', (req, res) => {
-	setInterval(updateRankings, 10000);
+	//setInterval(updateRankings, 10000);
 	res.send('Updated')
 })
 
