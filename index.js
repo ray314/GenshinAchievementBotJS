@@ -36,6 +36,7 @@ client.on("ready", () => {
 	// Live update start
 	console.log("Starting live update...");
 	setInterval(updateRankings, 10000);
+	console.log("Done")
 }());
 
 
@@ -105,7 +106,7 @@ client.on("message", async message => {
 			const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
 			pagination.run(client, message, rankRegions);
 			// Live
-		} if (message.content.startsWith(prefix + 'say')) {
+		} if (message.content.startsWith('.say')) {
 			if (message.author.bot) return;
 			const SayMessage = message.content.slice(4).trim();
 			message.channel.send("**" + SayMessage + "**")
