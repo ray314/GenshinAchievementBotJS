@@ -5,7 +5,6 @@ const port = 3000;
 
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU');
-const creds = require('./genshinachievements-3c51d828779a');
 
 const { Intents, Client, MessageEmbed, MessageButton, MessageActionRow, Message } = require("discord.js");
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
