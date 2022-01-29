@@ -128,13 +128,13 @@ client.on("message", async message => {
 			//const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
-			await GLBChannel.send({ embeds: [rankingsWorld] })
+			await GLBChannel.send(rankingsWorld)
 				.then(msg => rankingWorldMsgRef = msg);
-			await EUChannel.send({ embeds: [rankingsEU] })
+			await EUChannel.send(rankingsEU)
 				.then(msg => rankingEUMsgRef = msg);
-			await NAChannel.send({ embeds: [rankingsNA] })
+			await NAChannel.send(rankingsNA)
 				.then(msg => rankingNAMsgRef = msg);
-			await AsiaCannel.send({ embeds: [rankingsAsia] })
+			await AsiaCannel.send(rankingsAsia)
 				.then(msg => rankingAsiaMsgRef = msg);
         }
 
