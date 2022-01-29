@@ -57,7 +57,7 @@ const rankingsEmbed = async(title, region, limit) => {
 		// _rawData[1] = Name, _rawData[2] = Score
 		rankingsEmbed.addField(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
 	}
-	rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/', true)
+	rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#', true)
 		.setTimestamp()
 	return rankingsEmbed;
 }
@@ -104,9 +104,10 @@ client.on("message", async message => {
 			const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
 			const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
 			pagination.run(client, message, rankRegions);
-
 			// Live
-		} else if (msg === ".rankingglblive" && roles) {
+		} else if (msg === ".say") {
+			await message.channel.send(msg);
+        } else if (msg === ".rankingglblive" && roles) {
 			const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 			rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
 			// EU
@@ -122,6 +123,7 @@ client.on("message", async message => {
 			const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		}
+
     }
 	
 })
