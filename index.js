@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU');
