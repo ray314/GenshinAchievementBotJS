@@ -55,7 +55,7 @@ const rankingsEmbed = async(title, region, limit) => {
 		.setThumbnail('https://cdn.discordapp.com/attachments/364202581938929674/935324914964119642/icon.png')
 	for (let i = 0; i < limit; i++) {
 		// _rawData[1] = Name, _rawData[2] = Score
-		rankingsEmbed.addField(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[2]}`)
+		rankingsEmbed.addField(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
 	}
 	rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1Wa10jrAqu6hTdV8HJJf6jFKpLRjYht1xeBbsS0SDRUU/htmlview#', true)
 		.setTimestamp()
