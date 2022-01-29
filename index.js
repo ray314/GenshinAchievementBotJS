@@ -53,7 +53,7 @@ const rankingsEmbed = async(title, region, limit) => {
 		.setTitle(`Top ${limit} ${title} Achievements Rankings`)
 		.setURL('https://docs.google.com/spreadsheets/d/1Wa10jrAqu6hTdV8HJJf6jFKpLRjYht1xeBbsS0SDRUU/htmlview#')
 		.setThumbnail('https://cdn.discordapp.com/attachments/364202581938929674/935324914964119642/icon.png')
-	for (let i = 0; i < limit; i++) {
+	for (let i = 0; i < limit && i < rankingList.length; i++) {
 		// _rawData[1] = Name, _rawData[2] = Score
 		rankingsEmbed.addField(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
 	}
@@ -93,33 +93,37 @@ const updateRankings = async () => {
 // Receive messages from user
 client.on("message", async message => {
 	const msg = message.content.toLowerCase();
-	const roles = message.member.roles.cache.has('925164302082662460') || message.member.roles.cache.has('925163038712135700');
-	// Embed message
-	if (msg === ".rankings") {
-		const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
-		const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
-		const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
-		const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
-		const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
-		pagination.run(client, message, rankRegions);
+	// Check if member is not null
+	if (message.member !== null) {
+		const roles = message.member.roles.cache.has('925164302082662460') || message.member.roles.cache.has('925163038712135700');
+		// Embed message
+		if (msg === ".rankings") {
+			const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
+			const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
+			const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
+			const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
+			const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
+			pagination.run(client, message, rankRegions);
 
-		// Live
-	} else if (msg === ".rankingglblive" && roles) {
-		const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
-		rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
-		// EU
-	} else if (msg === ".rankingeulive" && roles) {
-		const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5);
-		rankingEUMsgRef = await message.channel.send({ embeds: [rankingsEU] });
-		// NA
-	} else if (msg === ".rankingnalive" && roles) {
-		const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5);
-		rankingNAMsgRef = await message.channel.send({ embeds: [rankingsNA] });
-		// Asia
-	} else if (msg === ".rankingasialive" && roles) {
-		const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
-		rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
-	}
+			// Live
+		} else if (msg === ".rankingglblive" && roles) {
+			const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
+			rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
+			// EU
+		} else if (msg === ".rankingeulive" && roles) {
+			const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5);
+			rankingEUMsgRef = await message.channel.send({ embeds: [rankingsEU] });
+			// NA
+		} else if (msg === ".rankingnalive" && roles) {
+			const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5);
+			rankingNAMsgRef = await message.channel.send({ embeds: [rankingsNA] });
+			// Asia
+		} else if (msg === ".rankingasialive" && roles) {
+			const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
+			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
+		}
+    }
+	
 })
 
 client.login(process.env.TOKEN);

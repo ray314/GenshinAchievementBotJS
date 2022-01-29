@@ -1,0 +1,3 @@
+C:\Users\justi\source\repos\GenshinAchievementBotJS\GenshinAchievementBotJS\obj\Debug\GenshinAchievementBotJS.njsproj.AssemblyReference.cache
+C:\Users\justi\source\repos\GenshinAchievementBotJS\GenshinAchievementBotJS\obj\Debug\GenshinAchievementBotJS.njsproj.CoreCompileInputs.cache
+C:\Users\justi\source\repos\GenshinAchievementBotJS\GenshinAchievementBotJS\bin\Microsoft.NodejsTools.WebRole.dll
