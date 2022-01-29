@@ -15,7 +15,7 @@ var rankingWorldMsgRef;
 var rankingEUMsgRef;
 var rankingNAMsgRef;
 var rankingAsiaMsgRef;
-var rankingList = [];
+
 client.on("ready", () => {
 	console.log(`Logged in as ${client.user.tag}!`)
 	client.user.setActivity('WHEEZETAO', { type: 'LISTENING' });
@@ -46,7 +46,7 @@ const rankingsEmbed = async(title, region, limit) => {
 	const sheet = doc.sheetsByTitle[region];
 	await sheet.loadHeaderRow(2);
 	const rows = await sheet.getRows({ offset: 1, limit: 10 });
-	rankingList = rows;
+	const rankingList = rows;
 	//console.log("Rows loaded");
 	// Embeds the ranking message
 	const rankingsEmbed = new MessageEmbed()
@@ -110,7 +110,6 @@ client.on("message", async message => {
 			if (message.author.bot) return;
 			const SayMessage = message.content.slice(4).trim();
 			message.channel.send("**" + SayMessage + "**")
-			message.channel.send("- " + `**${message.author}**`)
 		} else if (msg === ".rankingglblive" && roles) {
 			const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 			rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
