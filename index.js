@@ -66,7 +66,7 @@ const rankingsEmbed = async(title, region, limit) => {
 const updateRankings = async () => {
 	// Global
 	if (rankingWorldMsgRef !== undefined) {
-		const rankings = await rankingsEmbed('Global', 'World', 10);
+		const rankings = await rankingsEmbed('Global', 'World Rank', 10);
 		rankingWorldMsgRef.edit({ embeds: [rankings] });
 	}
 	// EU
@@ -81,7 +81,7 @@ const updateRankings = async () => {
 	}
 	// Asia
 	if (rankingAsiaMsgRef) {
-		const rankings = await rankingsEmbed('Asia', 'ASIA Rank', 5);
+		const rankings = await rankingsEmbed('Asia', 'Asia Rank', 5);
 		rankingAsiaMsgRef.edit({ embeds: [rankings] });
 	}
 	console.log("rankings updated");
@@ -94,16 +94,18 @@ const updateRankings = async () => {
 client.on("message", async message => {
 	const msg = message.content.toLowerCase();
 	const roles = message.member.roles.cache.has('925164302082662460') || message.member.roles.cache.has('925163038712135700');
+	// Embed message
 	if (msg === ".rankings") {
-		const rankingsWorld = await rankingsEmbed('Global', 'World', 10);
+		const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 		const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
 		const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
-		const rankingsAsia = await rankingsEmbed('Asia', 'ASIA Rank', 5)
+		const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
 		const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
 		pagination.run(client, message, rankRegions);
+
 		// Live
 	} else if (msg === ".rankingglblive" && roles) {
-		const rankingsWorld = await rankingsEmbed('Global', 'World', 10);
+		const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 		rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
 		// EU
 	} else if (msg === ".rankingeulive" && roles) {
@@ -115,7 +117,7 @@ client.on("message", async message => {
 		rankingNAMsgRef = await message.channel.send({ embeds: [rankingsNA] });
 		// Asia
 	} else if (msg === ".rankingasialive" && roles) {
-		const rankingsAsia = await rankingsEmbed('Asia', 'ASIA Rank', 5);
+		const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
 		rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 	}
 })
