@@ -102,13 +102,13 @@ client.on("message", async message => {
 		const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
 		const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
 		const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
-		const roles = message.member.roles.cache.has('925164302082662460') || message.member.roles.cache.has('925163038712135700');
+		const roles = message.member.roles.cache.has('925164302082662460') || message.member.roles.cache.has('925163038712135700') || message.member.roles.cache.has('925160493709131826');
 		// Embed message
 		if (msg === ".rankings") {
 			const rankRegions = [rankingsWorld, rankingsEU, rankingsNA, rankingsAsia];
 			pagination.run(client, message, rankRegions);
 			// Live
-		} if (msg.startsWith('.say')) {
+		} if (msg.startsWith('.say') && roles) {
 			if (message.author.bot) return;
 			// Get the channel mention
 			if (message.mentions.channels.size == 0) {
