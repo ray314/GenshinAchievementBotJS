@@ -16,6 +16,7 @@
     "express": "^4.17.2",
     "google-spreadsheet": "^3.2.0",
     "googleapis": "^92.0.0",
+    "mongoose": "^6.2.1",
     "reconlx": "^2.5.2"
   },
   "scripts": {
