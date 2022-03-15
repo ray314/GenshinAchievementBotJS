@@ -35,7 +35,7 @@ client.on("ready", () => {
 
 	// Live update start
 	console.log("Starting live update...");
-	setInterval(updateRankings, 60000 * 10);
+	setInterval(updateRankings, 60000 * 120);
 	console.log("Done")
 }());
 
