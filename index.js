@@ -44,7 +44,7 @@ const rankingsEmbed = async(title, region, limit) => {
 	// Load sheet
 	// NA RANK
 	const sheet = doc.sheetsByTitle[region];
-	await sheet.loadHeaderRow(3);
+	await sheet.loadHeaderRow(2);
 	const rows = await sheet.getRows({ offset: 0, limit: 10 });
 	const rankingList = rows;
 	//console.log("Rows loaded");
