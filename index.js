@@ -152,7 +152,7 @@ client.on("message", async message => {
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
 			//await postAllRankings();
-			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel);
+			clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel);
 			GLBChannel.send({ embeds: [rankingsWorld] })
 				.then(msg => rankingWorldMsgRef = msg);
 			EUChannel.send({ embeds: [rankingsEU] })
@@ -167,7 +167,7 @@ client.on("message", async message => {
 	
 })
 
-const clearChannels = async(GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
+const clearChannels = (GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
 	GLBChannel.bulkDelete(2)
 		.then(messages => console.log(`Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
