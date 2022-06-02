@@ -47,30 +47,31 @@ client.on("ready", () => {
 
 
 const rankingsEmbed = async(title, region, limit) => {
-	// Load sheet
-	const sheet;
+	
 	try {
-		sheet = doc.sheetsByTitle[region];
+		// Load sheet
+		const sheet = doc.sheetsByTitle[region];
+		await sheet.loadHeaderRow(2);
+		const rows = await sheet.getRows({ offset: 0, limit: 10 });
+		const rankingList = rows;
+		//console.log("Rows loaded");
+		// Embeds the ranking message
+		const rankingsEmbed = new MessageEmbed()
+			.setColor('#FFBB5C')
+			.setTitle(`Top ${limit} ${title} Achievements Rankings`)
+			.setURL('https://docs.google.com/spreadsheets/d/1Wa10jrAqu6hTdV8HJJf6jFKpLRjYht1xeBbsS0SDRUU/htmlview#')
+			.setThumbnail('https://cdn.discordapp.com/attachments/364202581938929674/935324914964119642/icon.png')
+		for (let i = 0; i < limit && i < rankingList.length; i++) {
+			// _rawData[1] = Name, _rawData[2] = Score
+			rankingsEmbed.addField(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
+		}
+		rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#', true)
+			.setTimestamp()
 	} catch (error) {
 		console.error(error);
 		return;
     }
-	await sheet.loadHeaderRow(2);
-	const rows = await sheet.getRows({ offset: 0, limit: 10 });
-	const rankingList = rows;
-	//console.log("Rows loaded");
-	// Embeds the ranking message
-	const rankingsEmbed = new MessageEmbed()
-		.setColor('#FFBB5C')
-		.setTitle(`Top ${limit} ${title} Achievements Rankings`)
-		.setURL('https://docs.google.com/spreadsheets/d/1Wa10jrAqu6hTdV8HJJf6jFKpLRjYht1xeBbsS0SDRUU/htmlview#')
-		.setThumbnail('https://cdn.discordapp.com/attachments/364202581938929674/935324914964119642/icon.png')
-	for (let i = 0; i < limit && i < rankingList.length; i++) {
-		// _rawData[1] = Name, _rawData[2] = Score
-		rankingsEmbed.addField(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
-	}
-	rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#', true)
-		.setTimestamp()
+	
 	return rankingsEmbed;
 }
 
