@@ -67,12 +67,13 @@ const rankingsEmbed = async(title, region, limit) => {
 		}
 		rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#', true)
 			.setTimestamp()
+		return rankingsEmbed
 	} catch (error) {
 		console.error(error);
 		return;
     }
 	
-	return rankingsEmbed;
+	return null;
 }
 
 // Update rankings in rankings channel
