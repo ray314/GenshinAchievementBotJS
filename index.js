@@ -22,12 +22,6 @@ const EUChannel = client.channels.cache.get('932173948999843870');
 const NAChannel = client.channels.cache.get('932173907694354492');
 const AsiaChannel = client.channels.cache.get('932173991710441472');
 
-// Rankings
-const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
-const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
-const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
-const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
-
 client.on("ready", () => {
 	console.log(`Logged in as ${client.user.tag}!`)
 	client.user.setActivity('WHEEZETAO', { type: 'LISTENING' });
@@ -115,10 +109,10 @@ client.on("message", async message => {
 		const NAChannel = client.channels.cache.get('932173907694354492');
 		const AsiaChannel = client.channels.cache.get('932173991710441472');*/
 
-		/*const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
+		const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 		const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
 		const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
-		const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)*/
+		const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
 
 		const roles = message.member.roles.cache.has('925164302082662460') || message.member.roles.cache.has('925163038712135700') || message.member.roles.cache.has('925160493709131826');
 		// Embed message
@@ -170,8 +164,13 @@ client.on("message", async message => {
     }
 	
 })
+// Post all rankings
+const postAllRankings = async() => {
+	const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
+	const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
+	const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
+	const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
 
-const postAllRankings = () => {
 	GLBChannel.send({ embeds: [rankingsWorld] })
 		.then(msg => rankingWorldMsgRef = msg);
 	EUChannel.send({ embeds: [rankingsEU] })
