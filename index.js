@@ -17,10 +17,10 @@ var rankingNAMsgRef;
 var rankingAsiaMsgRef;
 
 // Channels
-const GLBChannel = client.channels.cache.get('932174810858008586');
+/*const GLBChannel = client.channels.cache.get('932174810858008586');
 const EUChannel = client.channels.cache.get('932173948999843870');
 const NAChannel = client.channels.cache.get('932173907694354492');
-const AsiaChannel = client.channels.cache.get('932173991710441472');
+const AsiaChannel = client.channels.cache.get('932173991710441472');*/
 
 client.on("ready", () => {
 	console.log(`Logged in as ${client.user.tag}!`)
@@ -166,24 +166,8 @@ client.on("message", async message => {
     }
 	
 })
-// Post all rankings
-const postAllRankings = async() => {
-	const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
-	const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
-	const rankingsNA = await rankingsEmbed('NA', 'NA Rank', 5)
-	const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5)
 
-	GLBChannel.send({ embeds: [rankingsWorld] })
-		.then(msg => rankingWorldMsgRef = msg);
-	EUChannel.send({ embeds: [rankingsEU] })
-		.then(msg => rankingEUMsgRef = msg);
-	NAChannel.send({ embeds: [rankingsNA] })
-		.then(msg => rankingNAMsgRef = msg);
-	AsiaChannel.send({ embeds: [rankingsAsia] })
-		.then(msg => rankingAsiaMsgRef = msg);
-}
-
-const clearChannels = async() => {
+const clearChannels = async(GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
 	GLBChannel.bulkDelete(2)
 		.then(messages => console.log(`Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
