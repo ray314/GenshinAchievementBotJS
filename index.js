@@ -152,7 +152,7 @@ client.on("message", async message => {
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
 			//await postAllRankings();
-			await clearChannels();
+			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel);
 			GLBChannel.send({ embeds: [rankingsWorld] })
 				.then(msg => rankingWorldMsgRef = msg);
 			EUChannel.send({ embeds: [rankingsEU] })
