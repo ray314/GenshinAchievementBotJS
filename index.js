@@ -42,8 +42,13 @@ client.on("ready", () => {
 
 const rankingsEmbed = async(title, region, limit) => {
 	// Load sheet
-	// NA RANK
-	const sheet = doc.sheetsByTitle[region];
+
+	try {
+		const sheet = doc.sheetsByTitle[region];
+	} catch (error) {
+		console.error(error);
+		return;
+    }
 	await sheet.loadHeaderRow(2);
 	const rows = await sheet.getRows({ offset: 0, limit: 10 });
 	const rankingList = rows;
@@ -124,7 +129,7 @@ client.on("message", async message => {
 				targetChannel.send(saytext);
 			}
 		} else if (msg === ".rankingglblive" && roles) {
-			//const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
+			await pruneRankingChannel(message, channel);
 			rankingWorldMsgRef = await message.channel.send({ embeds: [rankingsWorld] });
 			// EU
 		} else if (msg === ".rankingeulive" && roles) {
@@ -152,6 +157,15 @@ client.on("message", async message => {
     }
 	
 })
+
+const pruneRankingChannel = async (message, channel) => {
+	let fetched;
+	do {
+		fetched = await channel.messages.fetch({ limit: 3 });
+		message.channel.bulkDelete(fetched);
+	}
+	while (fetched.size >= 2);
+};
 
 client.on('error', error => {
 	console.log("Discord Error:"+error);
