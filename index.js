@@ -105,10 +105,10 @@ client.on("message", async message => {
 	// Check if member is not null
 	if (message.member !== null) {
 		
-		/*const GLBChannel = client.channels.cache.get('932174810858008586');
+		const GLBChannel = client.channels.cache.get('932174810858008586');
 		const EUChannel = client.channels.cache.get('932173948999843870');
 		const NAChannel = client.channels.cache.get('932173907694354492');
-		const AsiaChannel = client.channels.cache.get('932173991710441472');*/
+		const AsiaChannel = client.channels.cache.get('932173991710441472');
 
 		const rankingsWorld = await rankingsEmbed('Global', 'World Rank', 10);
 		const rankingsEU = await rankingsEmbed('EU', 'EU Rank', 5)
@@ -151,15 +151,16 @@ client.on("message", async message => {
 			//const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
-			await postAllRankings();
-			/*GLBChannel.send({ embeds: [rankingsWorld] })
+			//await postAllRankings();
+			await clearChannels();
+			GLBChannel.send({ embeds: [rankingsWorld] })
 				.then(msg => rankingWorldMsgRef = msg);
 			EUChannel.send({ embeds: [rankingsEU] })
 				.then(msg => rankingEUMsgRef = msg);
 			NAChannel.send({ embeds: [rankingsNA] })
 				.then(msg => rankingNAMsgRef = msg);
 			AsiaChannel.send({ embeds: [rankingsAsia] })
-				.then(msg => rankingAsiaMsgRef = msg);*/
+				.then(msg => rankingAsiaMsgRef = msg);
         }
 
     }
