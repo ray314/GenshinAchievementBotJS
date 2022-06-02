@@ -54,9 +54,9 @@ client.on("ready", () => {
 
 const rankingsEmbed = async(title, region, limit) => {
 	// Load sheet
-
+	const sheet;
 	try {
-		const sheet = doc.sheetsByTitle[region];
+		sheet = doc.sheetsByTitle[region];
 	} catch (error) {
 		console.error(error);
 		return;
@@ -156,14 +156,15 @@ client.on("message", async message => {
 			//const rankingsAsia = await rankingsEmbed('Asia', 'Asia Rank', 5);
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
-			GLBChannel.send({ embeds: [rankingsWorld] })
+			postAllRankings();
+			/*GLBChannel.send({ embeds: [rankingsWorld] })
 				.then(msg => rankingWorldMsgRef = msg);
 			EUChannel.send({ embeds: [rankingsEU] })
 				.then(msg => rankingEUMsgRef = msg);
 			NAChannel.send({ embeds: [rankingsNA] })
 				.then(msg => rankingNAMsgRef = msg);
 			AsiaChannel.send({ embeds: [rankingsAsia] })
-				.then(msg => rankingAsiaMsgRef = msg);
+				.then(msg => rankingAsiaMsgRef = msg);*/
         }
 
     }
