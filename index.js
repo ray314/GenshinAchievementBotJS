@@ -169,16 +169,16 @@ client.on("message", async message => {
 
 const clearChannels = (GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
 	GLBChannel.bulkDelete(2)
-		.then(messages => console.log(`Bulk deleted ${messages.size} messages`))
+		.then(messages => console.log(`GLB Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 	EUChannel.bulkDelete(2)
-		.then(messages => console.log(`Bulk deleted ${messages.size} messages`))
+		.then(messages => console.log(`EU Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 	NAChannel.bulkDelete(2)
-		.then(messages => console.log(`Bulk deleted ${messages.size} messages`))
+		.then(messages => console.log(`NA Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 	AsiaChannel.bulkDelete(2)
-		.then(messages => console.log(`Bulk deleted ${messages.size} messages`))
+		.then(messages => console.log(`Asia Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 };
 
