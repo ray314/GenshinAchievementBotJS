@@ -73,7 +73,6 @@ const rankingsEmbed = async(title, region, limit) => {
 		return;
     }
 	
-	return null;
 }
 
 // Update rankings in rankings channel
@@ -81,22 +80,34 @@ const updateRankings = async () => {
 	// Global
 	if (rankingWorldMsgRef !== undefined) {
 		const rankings = await rankingsEmbed('Global', 'World Rank', 10);
-		rankingWorldMsgRef.edit({ embeds: [rankings] });
+		if (rankings != undefined) {
+			rankingWorldMsgRef.edit({ embeds: [rankings] });
+		}
+		
 	}
 	// EU
 	if (rankingEUMsgRef !== undefined) {
 		const rankings = await rankingsEmbed('EU', 'EU Rank', 5);
-		rankingEUMsgRef.edit({ embeds: [rankings] });
+		if (rankings != undefined) {
+			rankingEUMsgRef.edit({ embeds: [rankings] });
+		}
+		
 	}
 	// NA
 	if (rankingNAMsgRef !== undefined) {
 		const rankings = await rankingsEmbed('NA', 'NA Rank', 5);
-		rankingNAMsgRef.edit({ embeds: [rankings] });
+		if (rankings != undefined) {
+			rankingNAMsgRef.edit({ embeds: [rankings] });
+		}
+		
 	}
 	// Asia
 	if (rankingAsiaMsgRef) {
 		const rankings = await rankingsEmbed('Asia', 'Asia Rank', 5);
-		rankingAsiaMsgRef.edit({ embeds: [rankings] });
+		if (rankings != undefined) {
+			rankingAsiaMsgRef.edit({ embeds: [rankings] });
+		}
+		
 	}
 }
 
