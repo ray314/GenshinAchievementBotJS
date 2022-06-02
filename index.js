@@ -153,6 +153,10 @@ client.on("message", async message => {
 	
 })
 
+client.on('error', error => {
+	console.log("Discord Error:"+error);
+});
+
 client.login(process.env.TOKEN);
 
 app.get('/', (req, res) => {
@@ -163,7 +167,6 @@ app.get('/updateRankings', (req, res) => {
 	//setInterval(updateRankings, 10000);
 	res.send('Updated')
 })
-
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
