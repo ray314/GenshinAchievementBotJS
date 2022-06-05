@@ -70,14 +70,6 @@ const rankingsEmbed = async(title, region, limit) => {
 		return rankingsEmbed
 	} catch (error) {
 		console.error("Error trying to get rankings for " + region);
-		console.log("Reloading account...");
-		await doc.useServiceAccountAuth({
-			// Use env variables
-			client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-			private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-		});
-		console.log("Loading info...");
-		await doc.loadInfo(); // Load spreadsheet
 		return;
     }
 	
