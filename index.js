@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU');
@@ -73,6 +73,13 @@ const rankingsEmbed = async(title, region, limit) => {
 		return;
     }
 	
+}
+
+const getRankings = async(region) => {
+	const sheet = doc.sheetsByTitle[region];
+	await sheet.loadHeaderRow(2);
+	const rows = await sheet.getRows({ offset: 0 });
+	return rows;
 }
 
 // Update rankings in rankings channel
@@ -204,9 +211,38 @@ app.get('/', (req, res) => {
     res.send('WHEEZEEZEZEZEEZ')
 })
 
-app.get('/updateRankings', (req, res) => {
-	//setInterval(updateRankings, 10000);
-	res.send('Updated')
+app.get('/getrankings', async (req, res) => {
+	try {
+		// GLB Rank
+		let rows = await getRankings('World Rank');
+		const rankingList = {GLB: [], NA: [], EU: [], Asia: []};
+		for (i = 0; i < rows.length; i++) {
+			rankingList.GLB.push(rows[i]._rawData)
+		}
+		// NA Rank
+		rows = await getRankings('NA Rank');
+		for (i = 0; i < rows.length; i++) {
+			rankingList.NA.push(rows[i]._rawData)
+		}
+		// EU Rank
+		rows = await getRankings('EU Rank');
+		for (i = 0; i < rows.length; i++) {
+			rankingList.EU.push(rows[i]._rawData)
+		}
+		// Asia Rank
+		rows = await getRankings('Asia Rank');
+		for (i = 0; i < rows.length; i++) {
+			rankingList.Asia.push(rows[i]._rawData)
+		}
+		const json = JSON.stringify(rankingList);
+		
+		
+		res.send(json)
+	} catch (error) {
+		
+		console.error(error);
+    }
+	
 })
 
 app.listen(port, () => {
