@@ -236,7 +236,8 @@ app.get('/getrankings', async (req, res) => {
 		}
 		const json = JSON.stringify(rankingList);
 		
-		res.set('Access-Control-Allow-Origin', 'http://34.125.207.132:3080')
+		//res.set('Access-Control-Allow-Origin', 'http://34.125.207.132:3080')
+		res.set('Access-Control-Allow-Origin', '*')
 		res.send(json)
 	} catch (error) {
 		
