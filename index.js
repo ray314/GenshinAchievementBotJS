@@ -6,8 +6,8 @@ const port = process.env.PORT || 3001;
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU');
 
-const { Intents, Client, MessageEmbed, MessageButton, MessageActionRow, Message } = require("discord.js");
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
+const { Intents, Client, MessageEmbed, GatewayIntentBits } = require("discord.js");
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] })
 const pagination = require('./embedpages.js');
 
 
