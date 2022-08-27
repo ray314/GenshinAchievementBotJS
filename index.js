@@ -6,7 +6,7 @@ const port = process.env.PORT || 3001;
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU');
 
-const { Intents, Client, MessageEmbed, GatewayIntentBits } = require("discord.js");
+const { ActivityType, Client, MessageEmbed, GatewayIntentBits } = require("discord.js");
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] })
 const pagination = require('./embedpages.js');
 
@@ -23,8 +23,13 @@ const NAChannel = client.channels.cache.get('932173907694354492');
 const AsiaChannel = client.channels.cache.get('932173991710441472');*/
 
 client.on("ready", () => {
-	console.log(`Logged in as ${client.user.tag}!`)
-	client.user.setActivity('WHEEZETAO', { type: 'LISTENING' });
+	console.log(`Logged in as ${client.user.tag}!`);
+	client.user.setPresence({
+		activities: [{ name: 'WHEEZETAO', type: ActivityType.Listening}],
+		status: 'Listening',
+	})
+	//client.user.setActivity({ name: 'WHEEZETAO', type: ActivityType.Listening})
+	//client.user.setActivity('WHEEZETAO', { type: 'LISTENING' });
 });
 
 
