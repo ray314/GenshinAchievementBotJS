@@ -1,4 +1,3 @@
-const { Message, MessageEmbed } = require('discord.js');
 const { pagination } = require('reconlx');
 
 // Constants
