@@ -6,7 +6,7 @@ const port = process.env.PORT || 3001;
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU');
 
-const { ActivityType, Client, MessageEmbed, GatewayIntentBits } = require("discord.js");
+const { ActivityType, Client, EmbedBuilder, GatewayIntentBits } = require("discord.js");
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] })
 const pagination = require('./embedpages.js');
 
@@ -61,16 +61,16 @@ const rankingsEmbed = async(title, region, limit) => {
 		const rankingList = rows;
 		//console.log("Rows loaded");
 		// Embeds the ranking message
-		const rankingsEmbed = new MessageEmbed()
+		const rankingsEmbed = new EmbedBuilder()
 			.setColor('#FFBB5C')
 			.setTitle(`Top ${limit} ${title} Achievements Rankings`)
 			.setURL('https://docs.google.com/spreadsheets/d/1Wa10jrAqu6hTdV8HJJf6jFKpLRjYht1xeBbsS0SDRUU/htmlview#')
 			.setThumbnail('https://cdn.discordapp.com/attachments/364202581938929674/935324914964119642/icon.png')
 		for (let i = 0; i < limit && i < rankingList.length; i++) {
 			// _rawData[1] = Name, _rawData[2] = Score
-			rankingsEmbed.addField(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
+			rankingsEmbed.addFields(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
 		}
-		rankingsEmbed.addField('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#', true)
+		rankingsEmbed.addFields('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#', true)
 			.setTimestamp()
 		return rankingsEmbed
 	} catch (error) {
