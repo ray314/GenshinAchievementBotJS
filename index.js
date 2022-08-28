@@ -177,7 +177,6 @@ client.on("messageCreate", async message => {
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
 			//await postAllRankings();
-			console.log("test");
 			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel);
 			await GLBChannel.send({ embeds: [rankingsWorld] })
 				.then(msg => rankingWorldMsgRef = msg);
