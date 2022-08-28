@@ -7,7 +7,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU');
 
 const { ActivityType, Client, EmbedBuilder, GatewayIntentBits } = require("discord.js");
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] })
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] })
 const pagination = require('./embedpages.js');
 
 
@@ -68,13 +68,15 @@ const rankingsEmbed = async(title, region, limit) => {
 			.setThumbnail('https://cdn.discordapp.com/attachments/364202581938929674/935324914964119642/icon.png')
 		for (let i = 0; i < limit && i < rankingList.length; i++) {
 			// _rawData[1] = Name, _rawData[2] = Score
-			rankingsEmbed.addFields(`#${i + 1}: ${rankingList[i]._rawData[1]}`, `:trophy: ${rankingList[i]._rawData[3]}`)
+			//console.log(`#${i + 1}: ${rankingList[i]._rawData[1]} :trophy: ${rankingList[i]._rawData[3]}`)
+			rankingsEmbed.addFields({ name: 'Player', value: `#${i + 1}: ${rankingList[i]._rawData[1]} :trophy: ${rankingList[i]._rawData[3]}`})
 		}
-		rankingsEmbed.addFields('Spreadsheet:', 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#', true)
+		rankingsEmbed.addFields({ name: 'Spreadsheet:', value: 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#'})
 			.setTimestamp()
 		return rankingsEmbed
 	} catch (error) {
 		console.error("Error trying to get rankings for " + region);
+		console.error(error);
 		return;
     }
 	
@@ -124,11 +126,10 @@ const updateRankings = async () => {
 }
 
 // Receive messages from user
-client.on("message", async message => {
+client.on("messageCreate", async message => {
 	const msg = message.content.toLowerCase();
 	// Check if member is not null
 	if (message.member !== null) {
-		
 		const GLBChannel = client.channels.cache.get('932174810858008586');
 		const EUChannel = client.channels.cache.get('932173948999843870');
 		const NAChannel = client.channels.cache.get('932173907694354492');
@@ -176,6 +177,7 @@ client.on("message", async message => {
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
 			//await postAllRankings();
+			console.log("test");
 			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel);
 			await GLBChannel.send({ embeds: [rankingsWorld] })
 				.then(msg => rankingWorldMsgRef = msg);
