@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3001;
+const fetch = require('node-fetch');
 
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU');
@@ -69,7 +70,7 @@ const rankingsEmbed = async(title, region, limit) => {
 		for (let i = 0; i < limit && i < rankingList.length; i++) {
 			// _rawData[1] = Name, _rawData[2] = Score
 			//console.log(`#${i + 1}: ${rankingList[i]._rawData[1]} :trophy: ${rankingList[i]._rawData[3]}`)
-			rankingsEmbed.addFields({ name: 'Player', value: `#${i + 1}: ${rankingList[i]._rawData[1]} :trophy: ${rankingList[i]._rawData[3]}`})
+			rankingsEmbed.addFields({ name: `#${i + 1}: ${rankingList[i]._rawData[1]}`, value: ` :trophy: ${rankingList[i]._rawData[3]}`})
 		}
 		rankingsEmbed.addFields({ name: 'Spreadsheet:', value: 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#'})
 			.setTimestamp()
@@ -189,11 +190,17 @@ client.on("messageCreate", async message => {
         }
 
     }
+
+		// Get user data via UID
+		if (msg.startsWith('.playerinfo')) {
+			const UID = message.content.slice(11).trim();
+			await getUserData(UID).then(data => console.log(data));
+		}
 	
 })
 
 const clearChannels = async(GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
-	GLBChannel.bulkDelete(2)
+	GLBChannel.bulkDelete(1)
 		.then(messages => console.log(`GLB Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 	EUChannel.bulkDelete(2)
@@ -206,6 +213,21 @@ const clearChannels = async(GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
 		.then(messages => console.log(`Asia Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 };
+
+// Get user data from python
+const getUserData = async(uid) => {
+	const response = await fetch("http://127.0.0.1:5000/userdata", {
+		method: 'POST',
+		headers: {
+			'Content-type' : 'application/json',
+			'Accept' : 'application/json'
+		},
+		body: JSON.stringify(uid)}).catch(err => {
+			console.error(err)
+		});
+	const data = await response.json();
+	return data;
+}
 
 client.on('error', error => {
 	console.log("Discord Error:"+error);
