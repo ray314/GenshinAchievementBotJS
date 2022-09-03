@@ -10,6 +10,7 @@ const doc = new GoogleSpreadsheet('1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU'
 const { ActivityType, Client, EmbedBuilder, GatewayIntentBits } = require("discord.js");
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] })
 const pagination = require('./embedpages.js');
+const statsEmbed = require('./statsEmbed.js');
 
 
 var rankingWorldMsgRef;
@@ -194,9 +195,10 @@ client.on("messageCreate", async message => {
 		// Get user data via UID
 		if (msg.startsWith('.playerinfo')) {
 			const UID = message.content.slice(11).trim();
-			await getUserData(UID).then(data => console.log(data));
-		}
-	
+			await getUserData(UID).then(data => {
+				message.channel.send({ embeds: [statsEmbed.add(data)] })
+			});
+		} 
 })
 
 const clearChannels = async(GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
@@ -226,6 +228,7 @@ const getUserData = async(uid) => {
 			console.error(err)
 		});
 	const data = await response.json();
+	
 	return data;
 }
 
