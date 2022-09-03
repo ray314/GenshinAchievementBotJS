@@ -1,16 +1,22 @@
 import asyncio
 import json
 import genshin
-import jsonpickle
+import os
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+
+# Load environment variables
+load_dotenv()
+
 #Set up Flaskstrong>:
 app = Flask(__name__)
 #Set up Flask to bypass CORS at the front end:
 cors = CORS(app)
 
 #Set up alt account for genshin
-cookies = {"ltuid": 254026189, "ltoken": "8eDU7xaHkuQvdAQlvdetis4K3TEeKemaC8IH5Wpa"}
+cookies = { "ltuid" : os.getenv("LTUID"), "ltoken" : os.getenv("LTOKEN")}
+print(cookies)
 client = genshin.Client(cookies)
 
 #Create the receiver API POST endpoint:
