@@ -27,34 +27,60 @@ const AsiaChannel = client.channels.cache.get('932173991710441472');*/
 client.on("ready", () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 	client.user.setPresence({
-		activities: [{ name: 'WHEEZETAO', type: ActivityType.Listening}],
+		activities: [{ name: 'WHEEZETAO', type: ActivityType.Listening }],
 		status: 'Listening',
 	})
+	startUp();
 	//client.user.setActivity({ name: 'WHEEZETAO', type: ActivityType.Listening})
 	//client.user.setActivity('WHEEZETAO', { type: 'LISTENING' });
 });
 
+// Check if the bot is logged in, relog if it's not
+const checkLoggedIn = async () => {
+	if (!client.isReady()) {
+		console.log("Bot not logged in, relogging...");
+		await client.login(process.env.TOKEN).then(async () => {
+			console.log("Loading Google service account...");
+			await doc.useServiceAccountAuth({
+				// Use env variables
+				client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+				private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+			});
+			console.log("Loading spreadsheet...");
+			await doc.loadInfo(); // Load spreadsheet
+			console.log(doc.title); // Print title
+		});
 
-(async function () {
-	console.log("Loading account...");
+	}
+}
+
+// Load the service account
+const loadServiceAccount = async () => {
+	console.log("Loading Google service account...");
 	await doc.useServiceAccountAuth({
 		// Use env variables
 		client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
 		private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
 	});
-	console.log("Loading info...");
+	console.log("Loading spreadsheet...");
 	await doc.loadInfo(); // Load spreadsheet
 	console.log(doc.title); // Print title
+}
 
-	// Live update start
-	console.log("Starting live update...");
-	setInterval(updateRankings, 60000 * 60);
-	console.log("Done")
-}());
+// Start up the service account and live update
+const startUp = async() => {
+	await loadServiceAccount().then(() => {
+		// Live update start
+		console.log("Starting live update...");
+		setInterval(updateRankings, 60000 * 60);
+		setInterval(checkLoggedIn, 60000 * 180); // Check whether the bot is logged in
+		console.log("Done");
+	});
+};
 
 
-const rankingsEmbed = async(title, region, limit) => {
-	
+const rankingsEmbed = async (title, region, limit) => {
+
 	try {
 		// Load sheet
 		const sheet = doc.sheetsByTitle[region];
@@ -71,20 +97,20 @@ const rankingsEmbed = async(title, region, limit) => {
 		for (let i = 0; i < limit && i < rankingList.length; i++) {
 			// _rawData[1] = Name, _rawData[2] = Score
 			//console.log(`#${i + 1}: ${rankingList[i]._rawData[1]} :trophy: ${rankingList[i]._rawData[3]}`)
-			rankingsEmbed.addFields({ name: `#${i + 1}: ${rankingList[i]._rawData[1]}`, value: ` :trophy: ${rankingList[i]._rawData[3]}`})
+			rankingsEmbed.addFields({ name: `#${i + 1}: ${rankingList[i]._rawData[1]}`, value: ` :trophy: ${rankingList[i]._rawData[3]}` })
 		}
-		rankingsEmbed.addFields({ name: 'Spreadsheet:', value: 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#'})
+		rankingsEmbed.addFields({ name: 'Spreadsheet:', value: 'https://docs.google.com/spreadsheets/d/1N6Bo0oG22b0wsf_OtCuGjtJJw3r5Iy-U2YDz72BJtGU/htmlview#' })
 			.setTimestamp()
 		return rankingsEmbed
 	} catch (error) {
 		console.error("Error trying to get rankings for " + region);
 		console.error(error);
 		return;
-    }
-	
+	}
+
 }
 
-const getRankings = async(region) => {
+const getRankings = async (region) => {
 	const sheet = doc.sheetsByTitle[region];
 	await sheet.loadHeaderRow(2);
 	const rows = await sheet.getRows({ offset: 0 });
@@ -99,7 +125,7 @@ const updateRankings = async () => {
 		if (rankings != undefined) {
 			rankingWorldMsgRef.edit({ embeds: [rankings] });
 		}
-		
+
 	}
 	// EU
 	if (rankingEUMsgRef !== undefined) {
@@ -107,7 +133,7 @@ const updateRankings = async () => {
 		if (rankings != undefined) {
 			rankingEUMsgRef.edit({ embeds: [rankings] });
 		}
-		
+
 	}
 	// NA
 	if (rankingNAMsgRef !== undefined) {
@@ -115,7 +141,7 @@ const updateRankings = async () => {
 		if (rankings != undefined) {
 			rankingNAMsgRef.edit({ embeds: [rankings] });
 		}
-		
+
 	}
 	// Asia
 	if (rankingAsiaMsgRef) {
@@ -123,7 +149,7 @@ const updateRankings = async () => {
 		if (rankings != undefined) {
 			rankingAsiaMsgRef.edit({ embeds: [rankings] });
 		}
-		
+
 	}
 }
 
@@ -179,74 +205,78 @@ client.on("messageCreate", async message => {
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
 			//await postAllRankings();
-			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel);
-			await GLBChannel.send({ embeds: [rankingsWorld] })
-				.then(msg => rankingWorldMsgRef = msg);
-			await EUChannel.send({ embeds: [rankingsEU] })
-				.then(msg => rankingEUMsgRef = msg);
-			await NAChannel.send({ embeds: [rankingsNA] })
-				.then(msg => rankingNAMsgRef = msg);
-			await AsiaChannel.send({ embeds: [rankingsAsia] })
-				.then(msg => rankingAsiaMsgRef = msg);
-        }
+			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel).then(async () => { // Clear all channels before sending in the embeds for the rankings
+				await GLBChannel.send({ embeds: [rankingsWorld] })
+					.then(msg => rankingWorldMsgRef = msg);
+				await EUChannel.send({ embeds: [rankingsEU] })
+					.then(msg => rankingEUMsgRef = msg);
+				await NAChannel.send({ embeds: [rankingsNA] })
+					.then(msg => rankingNAMsgRef = msg);
+				await AsiaChannel.send({ embeds: [rankingsAsia] })
+					.then(msg => rankingAsiaMsgRef = msg);
+			}
+			);
 
-    }
+		}
 
-		// Get user data via UID
-		if (msg.startsWith('.playerinfo')) {
-			const UID = message.content.slice(11).trim();
-			await getUserData(UID).then(data => {
-				message.channel.send({ embeds: [statsEmbed.add(data)] })
-			});
-		} 
+	}
+
+	// Get user data via UID
+	if (msg.startsWith('.playerinfo')) {
+		const UID = message.content.slice(11).trim();
+		await getUserData(UID).then(data => {
+			message.channel.send({ embeds: [statsEmbed.add(data)] })
+		});
+	}
 })
 
-const clearChannels = async(GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
-	GLBChannel.bulkDelete(1)
+const clearChannels = async (GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
+	GLBChannel.bulkDelete(5)
 		.then(messages => console.log(`GLB Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
-	EUChannel.bulkDelete(2)
+	EUChannel.bulkDelete(5)
 		.then(messages => console.log(`EU Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
-	NAChannel.bulkDelete(2)
+	NAChannel.bulkDelete(5)
 		.then(messages => console.log(`NA Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
-	AsiaChannel.bulkDelete(2)
+	AsiaChannel.bulkDelete(5)
 		.then(messages => console.log(`Asia Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 };
 
 // Get user data from python
-const getUserData = async(uid) => {
+const getUserData = async (uid) => {
 	const response = await fetch("http://127.0.0.1:5000/userdata", {
 		method: 'POST',
 		headers: {
-			'Content-type' : 'application/json',
-			'Accept' : 'application/json'
+			'Content-type': 'application/json',
+			'Accept': 'application/json'
 		},
-		body: JSON.stringify(uid)}).catch(err => {
-			console.error(err)
-		});
+		body: JSON.stringify(uid)
+	}).catch(err => {
+		console.error(err)
+	});
 	const data = await response.json();
-	
+
 	return data;
 }
 
 client.on('error', error => {
-	console.log("Discord Error:"+error);
+	console.log("Discord Error:" + error);
 });
 
 client.login(process.env.TOKEN);
 
 app.get('/', (req, res) => {
-    res.send('WHEEZEEZEZEZEEZ')
+	res.send('WHEEZEEZEZEZEEZ')
 })
 
 app.get('/getrankings', async (req, res) => {
 	try {
 		// GLB Rank
 		let rows = await getRankings('World Rank');
-		const rankingList = {GLB: [], NA: [], EU: [], Asia: []};
+		const rankingList = { GLB: [], NA: [], EU: [], Asia: [] };
 		for (i = 0; i < rows.length; i++) {
 			rankingList.GLB.push(rows[i]._rawData)
 		}
@@ -266,17 +296,17 @@ app.get('/getrankings', async (req, res) => {
 			rankingList.Asia.push(rows[i]._rawData)
 		}
 		const json = JSON.stringify(rankingList);
-		
+
 		//res.set('Access-Control-Allow-Origin', 'http://34.125.207.132:3080')
 		res.set('Access-Control-Allow-Origin', '*')
 		res.send(json)
 	} catch (error) {
-		
+
 		console.error(error);
-    }
-	
+	}
+
 })
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
+	console.log(`App listening on port ${port}`)
 })
