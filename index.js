@@ -251,7 +251,7 @@ const getUserData = async (uid) => {
 		body: JSON.stringify(uid)
 	}).catch(err => {
 		console.error(err)
-	});
+	}); 
 	const data = await response.json();
 
 	return data;
