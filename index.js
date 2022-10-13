@@ -229,7 +229,13 @@ client.on("messageCreate", async message => {
 })
 
 const clearChannels = async (GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
-	await GLBChannel.bulkDelete(5)
+	await Promise.all([
+		GLBChannel.bulkDelete(5),
+		EUChannel.bulkDelete(5),
+		NAChannel.bulkDelete(5),
+		AsiaChannel.bulkDelete(5)
+	]).then(console.log("Deleted all messages"));
+	/*await GLBChannel.bulkDelete(5)
 		.then(messages => console.log(`GLB Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 	await EUChannel.bulkDelete(5)
@@ -240,7 +246,7 @@ const clearChannels = async (GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
 		.catch(console.error);
 	await AsiaChannel.bulkDelete(5)
 		.then(messages => console.log(`Asia Bulk deleted ${messages.size} messages`))
-		.catch(console.error);
+		.catch(console.error);*/
 };
 
 // Get user data from python
