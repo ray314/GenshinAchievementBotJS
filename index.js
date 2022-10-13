@@ -31,8 +31,6 @@ client.on("ready", () => {
 		status: 'Listening',
 	})
 	startUp();
-	//client.user.setActivity({ name: 'WHEEZETAO', type: ActivityType.Listening})
-	//client.user.setActivity('WHEEZETAO', { type: 'LISTENING' });
 });
 
 // Check if the bot is logged in, relog if it's not
