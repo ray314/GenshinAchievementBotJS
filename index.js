@@ -204,6 +204,7 @@ client.on("messageCreate", async message => {
 		} else if (msg == ".postallrankings" && roles) {
 			//await postAllRankings();
 			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel); // Clear all channels before sending in the embeds for the rankings
+			console.log("Sending rankings");
 			GLBChannel.send({ embeds: [rankingsWorld] })
 				.then(msg => rankingWorldMsgRef = msg);
 			EUChannel.send({ embeds: [rankingsEU] })
