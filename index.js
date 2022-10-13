@@ -66,7 +66,7 @@ const loadServiceAccount = async () => {
 }
 
 // Start up the service account and live update
-const startUp = async() => {
+const startUp = async () => {
 	await loadServiceAccount().then(() => {
 		// Live update start
 		console.log("Starting live update...");
@@ -203,18 +203,15 @@ client.on("messageCreate", async message => {
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
 			//await postAllRankings();
-			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel).then(async () => { // Clear all channels before sending in the embeds for the rankings
-				await GLBChannel.send({ embeds: [rankingsWorld] })
-					.then(msg => rankingWorldMsgRef = msg);
-				await EUChannel.send({ embeds: [rankingsEU] })
-					.then(msg => rankingEUMsgRef = msg);
-				await NAChannel.send({ embeds: [rankingsNA] })
-					.then(msg => rankingNAMsgRef = msg);
-				await AsiaChannel.send({ embeds: [rankingsAsia] })
-					.then(msg => rankingAsiaMsgRef = msg);
-			}
-			);
-
+			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel); // Clear all channels before sending in the embeds for the rankings
+			GLBChannel.send({ embeds: [rankingsWorld] })
+				.then(msg => rankingWorldMsgRef = msg);
+			EUChannel.send({ embeds: [rankingsEU] })
+				.then(msg => rankingEUMsgRef = msg);
+			NAChannel.send({ embeds: [rankingsNA] })
+				.then(msg => rankingNAMsgRef = msg);
+			AsiaChannel.send({ embeds: [rankingsAsia] })
+				.then(msg => rankingAsiaMsgRef = msg);
 		}
 
 	}
@@ -228,7 +225,7 @@ client.on("messageCreate", async message => {
 	}
 })
 
-const clearChannels = async (GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
+const clearChannels = async(GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
 	GLBChannel.bulkDelete(5)
 		.then(messages => console.log(`GLB Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
