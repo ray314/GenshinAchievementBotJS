@@ -203,16 +203,18 @@ client.on("messageCreate", async message => {
 			rankingAsiaMsgRef = await message.channel.send({ embeds: [rankingsAsia] });
 		} else if (msg == ".postallrankings" && roles) {
 			//await postAllRankings();
-			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel); // Clear all channels before sending in the embeds for the rankings
-			console.log("Sending rankings");
-			GLBChannel.send({ embeds: [rankingsWorld] })
-				.then(msg => rankingWorldMsgRef = msg);
-			EUChannel.send({ embeds: [rankingsEU] })
-				.then(msg => rankingEUMsgRef = msg);
-			NAChannel.send({ embeds: [rankingsNA] })
-				.then(msg => rankingNAMsgRef = msg);
-			AsiaChannel.send({ embeds: [rankingsAsia] })
-				.then(msg => rankingAsiaMsgRef = msg);
+			await clearChannels(GLBChannel, EUChannel, NAChannel, AsiaChannel).then(() => {
+				console.log("Sending rankings");
+				GLBChannel.send({ embeds: [rankingsWorld] })
+					.then(msg => rankingWorldMsgRef = msg);
+				EUChannel.send({ embeds: [rankingsEU] })
+					.then(msg => rankingEUMsgRef = msg);
+				NAChannel.send({ embeds: [rankingsNA] })
+					.then(msg => rankingNAMsgRef = msg);
+				AsiaChannel.send({ embeds: [rankingsAsia] })
+					.then(msg => rankingAsiaMsgRef = msg);
+			}); // Clear all channels before sending in the embeds for the rankings
+
 		}
 
 	}
@@ -226,17 +228,17 @@ client.on("messageCreate", async message => {
 	}
 })
 
-const clearChannels = async(GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
-	GLBChannel.bulkDelete(5)
+const clearChannels = async (GLBChannel, EUChannel, NAChannel, AsiaChannel) => {
+	await GLBChannel.bulkDelete(5)
 		.then(messages => console.log(`GLB Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
-	EUChannel.bulkDelete(5)
+	await EUChannel.bulkDelete(5)
 		.then(messages => console.log(`EU Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
-	NAChannel.bulkDelete(5)
+	await NAChannel.bulkDelete(5)
 		.then(messages => console.log(`NA Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
-	AsiaChannel.bulkDelete(5)
+	await AsiaChannel.bulkDelete(5)
 		.then(messages => console.log(`Asia Bulk deleted ${messages.size} messages`))
 		.catch(console.error);
 };
@@ -252,7 +254,7 @@ const getUserData = async (uid) => {
 		body: JSON.stringify(uid)
 	}).catch(err => {
 		console.error(err)
-	}); 
+	});
 	const data = await response.json();
 
 	return data;
