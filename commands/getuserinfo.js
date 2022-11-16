@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { statsEmbed } = require('../embeds/statsEmbed');
+const statsEmbed = require('../embeds/statsEmbed.js');
 const fetch = require('node-fetch');
 
 // Get user data from python
@@ -32,7 +32,7 @@ module.exports = {
     const UID = interaction.options.getInteger('input');
     //interaction
 		await getUserData(UID).then(data => {
-			interaction.reply(`${ { embeds: [statsEmbed.add(data)] } }`)
+			interaction.reply({ embeds: [statsEmbed.add(data)] })
 		}); 
   },
 };
