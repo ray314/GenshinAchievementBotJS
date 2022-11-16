@@ -6,7 +6,6 @@ module.exports = {
       const statsEmbed = new EmbedBuilder()
         .setColor('#FFBB5C')
         .setTitle(`${data.info.nickname}`)
-        .setThumbnail('https://cdn.discordapp.com/attachments/364202581938929674/935324914964119642/icon.png');
       statsEmbed.addFields({ name: 'Achievements: ', value: `${data.stats.achievements}`});
       statsEmbed.addFields({ name: 'Adventure Rank: ', value: `${data.info.level}`});
       statsEmbed.addFields({ name: 'Characters: ', value: `${data.stats.characters}`});
